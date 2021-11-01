@@ -6,7 +6,7 @@ from labelme import utils
 import numpy as np
 import glob
 import PIL.Image
-
+import cv2
 
 class labelme2coco(object):
     def __init__(self, labelme_json=[], save_json_path="./coco.json"):
@@ -48,7 +48,11 @@ class labelme2coco(object):
 
     def image(self, data, num):
         image = {}
-        img = utils.img_b64_to_arr(data["imageData"])
+        img = None
+        if data["imageData"] is None:
+            img = cv2.imread(os.path.join(args.labelme_images, data["imagePath"]))
+        else:
+            img = utils.img_b64_to_arr(data["imageData"])
         height, width = img.shape[:2]
         img = None
         image["height"] = height
